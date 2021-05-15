@@ -30,7 +30,8 @@ router.post('/register', (req,res)=>{
     })
     .then((user)=>{
         if (user) {
-            return res.status(400).json({msg:'A user is already registered with this email'});
+            errors.email = 'Email already exists';
+            return res.status(400).json(errors);
         } else {
             
             //create new user
@@ -84,14 +85,19 @@ router.post('/login', (req,res)=>{
     const email = req.body.email;
     const password = req.body.password;
 
+    const {errors, isValid} = validateLoginInput(req.body);
+
+    if (!isValid) {
+        res.status(400).json(errors);
+    }
+
     User.findOne({
         email
     })
     .then(user => {
         if (!user) {
-            return res.status(404).json({
-                email: 'This email is not registered'
-            })
+            errors.email = 'Email does not exist';
+            res.status(400).json(errors);
         }
 
         // compare password
@@ -116,9 +122,8 @@ router.post('/login', (req,res)=>{
                     }
                 )
             } else {
-                return res.status(400).json({
-                    password: 'Incorrect Password!'
-                })
+                errors.password = 'Incorrect Password';
+                res.status(400).json(errors);
             }
         })
         .catch(err => console.log(err))
