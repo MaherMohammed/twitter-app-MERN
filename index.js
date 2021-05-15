@@ -32,7 +32,11 @@ app.use('/api/tweets',tweets);
 require('./config/passport')(passport);
 app.use(passport.initialize());
 
-
+app.get('/',(req,res)=>{
+    res.json({
+        msg: 'Hello World!'
+    })
+})
 
 const PORT = process.env.PORT || 5000;
 
