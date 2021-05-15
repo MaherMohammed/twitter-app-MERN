@@ -18,6 +18,13 @@ router.get('/testUsers', (req,res)=>{
 
 //register user
 router.post('/register', (req,res)=>{
+
+    const {errors, isValid} = validateRegisterInput(req.body);
+
+    if (!isValid) {
+        res.status(400).json(errors);
+    }
+
     User.findOne({
         email: req.body.email
     })
