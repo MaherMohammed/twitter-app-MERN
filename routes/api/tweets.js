@@ -36,12 +36,12 @@ router.get('/:id', (req, res) => {
 
 
 router.post('/',passport.authenticate('jwt', { session: false }),(req,res)=>{
-    const { errors, isValid } = validateTweetInput(req.body);
+    const { errors, isValid } = validateTweete(req.body);
   
       if (!isValid) {
         return res.status(400).json(errors);
       }
-
+ 
       const newTweet = new Tweet({
           text: req.body.text,
           user:req.user.id
